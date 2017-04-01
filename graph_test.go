@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -25,4 +26,14 @@ func TestCovers(t *testing.T) {
 	g := toGraph("a,b;b,c;c,d;a,d")
 	vc := VertexCover{[]string{"a", "c"}}
 	assert.True(t, vc.Covers(g))
+	g1 := toGraph("a,b;b,c;c,d;a,d")
+	vc1 := VertexCover{[]string{"a", "b"}}
+	assert.False(t, vc1.Covers(g1))
+}
+
+func TestMinCover(t *testing.T) {
+	g := toGraph("a,b;b,c;c,d;a,d")
+	min := MinCover(g, GenerateVertexCover(g))
+	fmt.Printf("min is %v#", min)
+	assert.Equal(t, 2, min.Size())
 }

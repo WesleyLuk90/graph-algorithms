@@ -1,6 +1,9 @@
 package main
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
 type Edge struct {
 	A string
@@ -19,12 +22,26 @@ type VertexCover struct {
 	Vertices []string
 }
 
-func (v *VertexCover) Covers(g Graph) bool {
+func (vc *VertexCover) HasVertex(v string) bool {
+	for _, vertex := range vc.Vertices {
+		if vertex == v {
+			return true
+		}
+	}
 	return false
 }
 
+func (v *VertexCover) Covers(g Graph) bool {
+	for _, edge := range g.Edges {
+		if !v.HasVertex(edge.A) && !v.HasVertex(edge.B) {
+			return false
+		}
+	}
+	return true
+}
+
 func (v *VertexCover) Size() int {
-	return 0
+	return len(v.Vertices)
 }
 
 func toGraph(s string) Graph {
@@ -65,6 +82,19 @@ func GenerateVertexCover(g Graph) []VertexCover {
 	}
 	iter(0, make([]string, 0))
 	return vc
+}
+
+func MinCover(g Graph, vcs []VertexCover) *VertexCover {
+	minSize := 1000000
+	var minimumVertexCover *VertexCover = nil
+	for i, vc := range vcs {
+		if vc.Size() < minSize && vc.Covers(g) {
+			fmt.Printf("update %v#\n", vc)
+			minSize = vc.Size()
+			minimumVertexCover = &vcs[i]
+		}
+	}
+	return minimumVertexCover
 }
 
 func run(s string) {
