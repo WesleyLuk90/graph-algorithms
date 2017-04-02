@@ -1,13 +1,20 @@
 package main
 
-import (
-	"fmt"
-	"strings"
-)
+import "strings"
 
 type Edge struct {
 	A string
 	B string
+}
+
+func (e *Edge) GetOpposite(v string) string {
+	if e.A == v {
+		return e.B
+	}
+	if e.B == v {
+		return e.A
+	}
+	panic("Invalid vertex")
 }
 
 type Graph struct {
@@ -16,6 +23,16 @@ type Graph struct {
 
 func (g *Graph) AddEdge(a, b string) {
 	g.Edges = append(g.Edges, Edge{a, b})
+}
+
+func (g *Graph) EdgesFrom(a string) []Edge {
+	edges := make([]Edge, 0)
+	for _, e := range g.Edges {
+		if e.A == a || e.B == a {
+			edges = append(edges, e)
+		}
+	}
+	return edges
 }
 
 type VertexCover struct {
@@ -86,15 +103,33 @@ func GenerateVertexCover(g Graph) []VertexCover {
 
 func MinCover(g Graph, vcs []VertexCover) *VertexCover {
 	minSize := 1000000
-	var minimumVertexCover *VertexCover = nil
+	var minimumVertexCover *VertexCover
 	for i, vc := range vcs {
 		if vc.Size() < minSize && vc.Covers(g) {
-			fmt.Printf("update %v#\n", vc)
 			minSize = vc.Size()
 			minimumVertexCover = &vcs[i]
 		}
 	}
 	return minimumVertexCover
+}
+
+type SpanningTree struct {
+	Edges []Edge
+}
+
+func GenerateSpanningTree(g Graph, startVertex string) []SpanningTree {
+	trees := make([]SpanningTree, 0)
+	var iter func(string, map[string]struct{}, SpanningTree)
+	iter = func(fromVertex string, usedVertices map[string]struct{}, currentTree SpanningTree) {
+		edges := g.EdgesFrom(fromVertex)
+		done := true
+		for _,edge := range edges {
+			opposite := edge.GetOpposite(v)
+			if _,ok :=
+		}
+	}
+	iter(startVertex, make(map[string]struct{}), SpanningTree{})
+	return trees
 }
 
 func run(s string) {

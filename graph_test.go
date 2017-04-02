@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -34,6 +33,11 @@ func TestCovers(t *testing.T) {
 func TestMinCover(t *testing.T) {
 	g := toGraph("a,b;b,c;c,d;a,d")
 	min := MinCover(g, GenerateVertexCover(g))
-	fmt.Printf("min is %v#", min)
 	assert.Equal(t, 2, min.Size())
+}
+
+func TestGenerateSpanningTree(t *testing.T) {
+	g := toGraph("a,b;b,c;c,d")
+	spanningTrees := GenerateSpanningTree(g, "a")
+	assert.Equal(t, 1, len(spanningTrees))
 }
